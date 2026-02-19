@@ -6,15 +6,14 @@ print(type(obj))         # <class '__main__.Empty'>
 
 
 class Dog:
-    species = "Собака"
+    species = "dog"
 
     def bark(self):
-        return "Гав!"
+        return "Woof!"
 
 d = Dog()
-print(d.species)         # Собака
-print(d.bark())          # Гав!
-
+print(d.species)         # dog
+print(d.bark())          # Woof!
 
 class Calculator:
     def add(self, a, b):
@@ -30,10 +29,10 @@ print(calc.multiply(3, 4))  # 12
 
 class Color:
     def __str__(self):
-        return "Я — цвет"
+        return "My favorite color is blue"
 
 c = Color()
-print(c)                 # Я — цвет
+print(c)          
 
 
 class Point:
