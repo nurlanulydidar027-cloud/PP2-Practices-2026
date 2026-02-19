@@ -61,3 +61,4 @@ b = Bird()
 print(b.is_alive())      # True
 print(b.move())          # Двигаюсь
 print(b.fly())           # Лечу
+#проверка 
