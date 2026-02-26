@@ -1,24 +1,25 @@
 import math
-import random
 
-# 1. Basic math functions
-print(math.sqrt(25))        # 5.0
-print(math.pi)              # 3.14159...
+# 1. Degrees to Radians
+degree = float(input("Input degree: "))
+radian = math.radians(degree)
+print(f"Output radian: {radian:.6f}")
 
-# 2. Floor and ceil
-print(math.floor(4.9))      # 4
-print(math.ceil(4.1))       # 5
+# 2. Area of Trapezoid
+height = float(input("Height: "))
+base1 = float(input("Base, first value: "))
+base2 = float(input("Base, second value: "))
+area = ((base1 + base2) / 2) * height
+print(f"Expected Output: {area}")
 
-# 3. Power and log
-print(math.pow(2, 10))      # 1024.0
-print(math.log(100, 10))    # 2.0
+# 3. Area of Regular Polygon
+n = int(input("Input number of sides: "))
+side = float(input("Input the length of a side: "))
+area = (n * side ** 2) / (4 * math.tan(math.pi / n))
+print(f"The area of the polygon is: {area:.0f}")
 
-# 4. Random integer
-num = random.randint(1, 100)
-print(num)                  # random number 1-100
-
-# 5. Random choice and shuffle
-fruits = ["apple", "banana", "kiwi"]
-print(random.choice(fruits))   # random fruit
-random.shuffle(fruits)
-print(fruits)                  # shuffled list
+# 4. Area of Parallelogram
+base = float(input("Length of base: "))
+height = float(input("Height of parallelogram: "))
+area = base * height
+print(f"Expected Output: {area}")
