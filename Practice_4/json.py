@@ -1,25 +1,21 @@
 import json
 
-# 1. Dictionary to JSON string (dumps)
-user = {"name": "Alice", "age": 25}
-json_string = json.dumps(user)
-print(json_string)          # {"name": "Alice", "age": 25}
+# Читаем JSON файл
+with open("sample-data.json", "r") as f:
+    data = json.load(f)
 
-# 2. JSON string to dictionary (loads)
-text = '{"name": "Bob", "age": 30}'
-user = json.loads(text)
-print(user["name"])         # Bob
+# Заголовок таблицы
+print("Interface Status")
+print("=" * 80)
+print(f"{'DN':<50} {'Description':<20} {'Speed':<10} {'MTU'}")
+print(f"{'-'*50} {'-'*20} {'-'*6} {'-'*6}")
 
-# 3. Write to file (dump)
-data = {"city": "Almaty", "population": 2000000}
-with open("city.json", "w") as f:
-    json.dump(data, f)
+# Парсим каждый интерфейс
+for item in data["imdata"]:
+    attrs = item["l1PhysIf"]["attributes"]
+    dn    = attrs["dn"]
+    descr = attrs["descr"]
+    speed = attrs["speed"]
+    mtu   = attrs["mtu"]
 
-# 4. Read from file (load)
-with open("city.json", "r") as f:
-    loaded = json.load(f)
-print(loaded["city"])       # Almaty
-
-# 5. Pretty print JSON (indent)
-person = {"name": "Charlie", "age": 22, "hobbies": ["gaming", "coding"]}
-print(json.dumps(person, indent=4))
+    print(f"{dn:<50} {descr:<20} {speed:<10} {mtu}")
