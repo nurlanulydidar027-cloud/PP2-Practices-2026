@@ -1,28 +1,28 @@
-from datetime import datetime, date, timedelta
+from datetime import datetime, timedelta
 
-# 1. Get current date and time
-now = datetime.now()
-print(now)              # 2026-02-19 10:30:00
-print(now.year)         # 2026
-print(now.month)        # 2
-print(now.day)          # 19
+# 1. Subtract five days from current date
+today = datetime.now()
+five_days_ago = today - timedelta(days=5)
+print("5 days ago:", five_days_ago.strftime("%Y-%m-%d"))
 
-# 2. Create a specific date
-birthday = date(2000, 5, 15)
-print(birthday)         # 2000-05-15
 
-# 3. Difference between two dates
-today = date.today()
-birthday = date(2000, 5, 15)
-diff = today - birthday
-print(diff.days)        # number of days since birthday
+# 2. Print yesterday, today, tomorrow
+yesterday = today - timedelta(days=1)
+tomorrow = today + timedelta(days=1)
+print("Yesterday:", yesterday.strftime("%Y-%m-%d"))
+print("Today:    ", today.strftime("%Y-%m-%d"))
+print("Tomorrow: ", tomorrow.strftime("%Y-%m-%d"))
 
-# 4. Add days to a date
-today = date.today()
-future = today + timedelta(days=30)
-print(future)           # date 30 days from now
 
-# 5. Format date as string
-now = datetime.now()
-print(now.strftime("%d-%m-%Y"))   # 19-02-2026
-print(now.strftime("%H:%M:%S"))   # 10:30:00
+# 3. Drop microseconds from datetime
+now_with_microseconds = datetime.now()
+now_without_microseconds = now_with_microseconds.replace(microsecond=0)
+print("With microseconds:   ", now_with_microseconds)
+print("Without microseconds:", now_without_microseconds)
+
+
+# 4. Calculate two date difference in seconds
+date1 = datetime(2024, 1, 1)
+date2 = datetime(2024, 12, 31)
+difference = date2 - date1
+print("Difference in seconds:", difference.total_seconds())
