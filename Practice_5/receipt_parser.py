@@ -4,6 +4,8 @@ Parses a raw text receipt and extracts items, prices, and totals.
 """
 
 import re
+import os
+# import json
 
 
 def parse_receipt(filepath: str) -> dict:
@@ -88,11 +90,13 @@ def display_receipt(data: dict) -> None:
 
 
 def main():
-    filepath = "raw.txt"
+    filepath = os.path.join(os.path.dirname(__file__), "raw.txt")
     print(f"Parsing receipt from: {filepath}\n")
     data = parse_receipt(filepath)
     display_receipt(data)
 
+    # print("\n---JSON OUTPUT---")
+    # print(json.dumps(data, indent=4))
 
 if __name__ == "__main__":
     main()
