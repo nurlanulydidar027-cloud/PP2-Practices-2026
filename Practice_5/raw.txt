@@ -1,0 +1,23 @@
+SUPERMARKET RECEIPT
+====================
+Date: 2024-03-15
+Time: 14:32
+
+Items:
+Milk 2L              1200
+Bread                 450
+Eggs (12pcs)          900
+Butter 200g           650
+Cheese 300g          1100
+Apples 1kg            500
+Chicken breast 1kg   1800
+Rice 1kg              350
+Pasta 500g            280
+Tomatoes 1kg          420
+
+====================
+Subtotal:            7650
+Tax (12%):            918
+TOTAL:               8568
+====================
+Thank you for shopping!
