@@ -187,4 +187,4 @@ python builtin_functions/map_filter_reduce.py
 
 ## 👤 Author
 
-> Replace with your name and GitHub profile link.
+> nurlanulydidar027-cloud
