@@ -1,5 +1,6 @@
 import csv
 import psycopg2
+import os
 from config import DB_CONFIG
 from connect import get_connection
 
@@ -38,23 +39,30 @@ def add_contact(name, phone):
 
 def import_from_csv(file_path):
     """Загружает данные из CSV файла"""
+    # Проверка: существует ли файл по указанному пути
+    if not os.path.exists(file_path):
+        print(f"Ошибка: Файл не найден по пути: {os.path.abspath(file_path)}")
+        return
+
     conn = get_connection()
     if conn:
         try:
             cur = conn.cursor()
             with open(file_path, mode='r', encoding='utf-8') as f:
                 reader = csv.reader(f)
+                count = 0
                 for row in reader:
-                    if row:
+                    if row and len(row) >= 2:
                         cur.execute(
-                            "INSERT INTO phonebook (user_name, phone_number) VALUES (%s, %s) ON CONFLICT DO NOTHING",
-                            (row[0], row[1])
+                            "INSERT INTO phonebook (user_name, phone_number) VALUES (%s, %s) ON CONFLICT (phone_number) DO NOTHING",
+                            (row[0].strip(), row[1].strip())
                         )
+                        count += 1
             conn.commit()
-            print(f"Данные из {file_path} успешно импортированы!")
+            print(f"Успешно обработано строк: {count}. Данные импортированы!")
             cur.close()
         except Exception as e:
-            print(f"Ошибка импорта: {e}")
+            print(f"Ошибка при чтении файла или записи в БД: {e}")
         finally:
             conn.close()
 
@@ -76,7 +84,7 @@ def update_contact(name, new_phone):
             conn.close()
 
 def query_contacts(search_term):
-    """Ищет контакты по части имени (фильтрация)"""
+    """Ищет контакты по части имени"""
     sql = "SELECT * FROM phonebook WHERE user_name ILIKE %s"
     conn = get_connection()
     if conn:
@@ -112,7 +120,7 @@ def delete_contact(name_or_phone):
             conn.close()
 
 if __name__ == "__main__":
-    create_table() # Сначала убедимся, что таблица есть
+    create_table() 
     
     while True:
         print("\n--- PhoneBook Меню ---")
@@ -126,7 +134,8 @@ if __name__ == "__main__":
         choice = input("Выберите действие (1-6): ")
         
         if choice == '1':
-            import_from_csv('contacts.csv')
+            # Используем путь, который ты скинул
+            import_from_csv('Practice_7/contact.csv')
         elif choice == '2':
             n = input("Введите имя: ")
             p = input("Введите номер: ")
