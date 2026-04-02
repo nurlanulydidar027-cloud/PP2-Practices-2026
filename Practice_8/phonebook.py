@@ -3,28 +3,26 @@ from config import DB_CONFIG
 from connect import get_connection
 
 def upsert_contact(name, phone):
-    """3.2: Процедура добавления (INSERT) или обновления (UPDATE), если имя уже есть"""
+    """Задача 2: Процедура добавления или обновления контакта"""
     conn = get_connection()
     if conn:
         try:
             cur = conn.cursor()
-            # Используем CALL для вызова процедуры
             cur.execute("CALL upsert_contact(%s, %s)", (name, phone))
             conn.commit()
-            print(f"Контакт '{name}' обработан (добавлен/обновлен) через процедуру.")
+            print(f"Контакт '{name}' обработан (добавлен/обновлен).")
             cur.close()
         except Exception as e:
-            print(f"Ошибка процедуры upsert: {e}")
+            print(f"Ошибка upsert: {e}")
         finally:
             conn.close()
 
 def search_contacts(pattern):
-    """3.2: Функция поиска по паттерну (имя или телефон)"""
+    """Задача 1: Поиск по паттерну (имя или телефон)"""
     conn = get_connection()
     if conn:
         try:
             cur = conn.cursor()
-            # Используем SELECT для вызова функции, возвращающей таблицу
             cur.execute("SELECT * FROM get_contacts_by_pattern(%s)", (pattern,))
             rows = cur.fetchall()
             if rows:
@@ -37,16 +35,46 @@ def search_contacts(pattern):
         finally:
             conn.close()
 
+def bulk_insert_contacts():
+    """Задача 3: Массовая вставка с валидацией телефона"""
+    conn = get_connection()
+    if conn:
+        try:
+            n = int(input("Сколько контактов добавить? "))
+            names = []
+            phones = []
+            for i in range(n):
+                name = input(f"  Имя {i+1}: ")
+                phone = input(f"  Телефон {i+1}: ")
+                names.append(name)
+                phones.append(phone)
+
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM bulk_insert_contacts(%s, %s)", (names, phones))
+            bad_rows = cur.fetchall()
+            conn.commit()
+
+            if bad_rows:
+                print("\nНекорректные данные (не добавлены):")
+                for row in bad_rows:
+                    print(f"  Имя: {row[0]} | Телефон: {row[1]}")
+            else:
+                print("Все контакты успешно добавлены.")
+            cur.close()
+        except Exception as e:
+            print(f"Ошибка bulk insert: {e}")
+        finally:
+            conn.close()
+
 def get_paginated_contacts(limit, offset):
-    """3.2: Функция для пагинации (LIMIT и OFFSET)"""
+    """Задача 4: Пагинация (LIMIT и OFFSET)"""
     conn = get_connection()
     if conn:
         try:
             cur = conn.cursor()
-            # Вызываем функцию из БД для постраничного вывода
             cur.execute("SELECT * FROM get_contacts_paginated(%s, %s)", (limit, offset))
             rows = cur.fetchall()
-            print(f"\nПоказ контактов (Лимит: {limit}, Смещение: {offset}):")
+            print(f"\nКонтакты (Лимит: {limit}, Смещение: {offset}):")
             for row in rows:
                 print(f"ID: {row[0]} | Name: {row[1]} | Phone: {row[2]}")
             cur.close()
@@ -54,7 +82,7 @@ def get_paginated_contacts(limit, offset):
             conn.close()
 
 def delete_contact_proc(identifier):
-    """3.2: Процедура удаления по имени или номеру телефона"""
+    """Задача 5: Удаление по имени или номеру телефона"""
     conn = get_connection()
     if conn:
         try:
@@ -69,29 +97,32 @@ def delete_contact_proc(identifier):
 if __name__ == "__main__":
     while True:
         print("\n--- PhoneBook (Practice 08: Functions & Procedures) ---")
-        print("1. Добавить/Обновить контакт (Upsert Procedure)")
-        print("2. Поиск по шаблону (Pattern Function)")
-        print("3. Показать страницу контактов (Pagination Function)")
-        print("4. Удалить контакт (Delete Procedure)")
-        print("5. Выход")
-        
-        choice = input("Выберите действие (1-5): ")
-        
+        print("1. Добавить/Обновить контакт (Upsert)")
+        print("2. Поиск по шаблону (Pattern Search)")
+        print("3. Массовое добавление (Bulk Insert)")
+        print("4. Показать страницу контактов (Pagination)")
+        print("5. Удалить контакт (Delete)")
+        print("6. Выход")
+
+        choice = input("Выберите действие (1-6): ")
+
         if choice == '1':
             n = input("Введите имя: ")
             p = input("Введите телефон: ")
             upsert_contact(n, p)
         elif choice == '2':
-            patt = input("Введите часть имени или номера для поиска: ")
+            patt = input("Введите часть имени или номера: ")
             search_contacts(patt)
         elif choice == '3':
+            bulk_insert_contacts()
+        elif choice == '4':
             lim = int(input("Сколько записей показать? (Limit): "))
             off = int(input("Сколько пропустить? (Offset): "))
             get_paginated_contacts(lim, off)
-        elif choice == '4':
+        elif choice == '5':
             val = input("Введите имя или номер для удаления: ")
             delete_contact_proc(val)
-        elif choice == '5':
+        elif choice == '6':
             print("Выход...")
             break
         else:
